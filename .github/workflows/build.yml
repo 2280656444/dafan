@@ -1,0 +1,39 @@
+name: Build APK
+
+on:
+  push:
+    branches: [ "main", "master" ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v4
+
+    - name: Set up JDK 17
+      uses: actions/setup-java@v4
+      with:
+        distribution: 'temurin'
+        java-version: '17'
+
+    - name: Setup Gradle
+      uses: gradle/actions/setup-gradle@v3
+
+    # 核心：让 GitHub 服务器自己生成缺失的 gradlew 和 gradle-wrapper.jar
+    - name: Generate Gradle Wrapper
+      run: gradle wrapper
+
+    # 赋予执行权限并打包
+    - name: Build with Gradle
+      run: |
+        chmod +x gradlew
+        ./gradlew assembleDebug
+
+    - name: Upload APK
+      uses: actions/upload-artifact@v4
+      with:
+        name: dafan-app
+        path: app/build/outputs/apk/debug/app-debug.apk
