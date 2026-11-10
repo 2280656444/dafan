@@ -24,7 +24,7 @@ jobs:
 
     # 核心：让 GitHub 服务器自己生成缺失的 gradlew 和 gradle-wrapper.jar
     - name: Generate Gradle Wrapper
-      run: gradle wrapper
+      run: gradle wrapper --gradle-version 8.7
 
     # 赋予执行权限并打包
     - name: Build with Gradle
